@@ -9,6 +9,9 @@ const CELL_SIZE : int = 50
 # Айди тайлов
 var tile_id : int = 0
 
+var running : bool = 1
+
+# Сигналы
 signal died
 signal opened
 signal flagged
@@ -46,6 +49,7 @@ func new_game():
 	populate_mines()
 	generate_numbers()
 	cover_grass()
+	running = 1
 
 # Заполняет поле минами	
 func populate_mines():
@@ -91,18 +95,18 @@ func cover_grass():
 			set_cell(grass_layer, Vector2i(x, y), tile_id, Vector2i(3 - ((x + y) % 2), 0))
 
 func _input(event):
-	if event is InputEventMouseButton:
-		if event.position.y < ROWS * CELL_SIZE:
-			var map_position = local_to_map(event.position)
-			if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
-				if not is_flag(map_position):
-					if is_mine(map_position):
-						died.emit()
-						print("Game is over!")
-					else:
-						process_lmb(map_position)
-			elif event.button_index == MOUSE_BUTTON_RIGHT and event.pressed:
-				process_rmb(map_position)
+	if running:
+		if event is InputEventMouseButton:
+			if event.position.y < ROWS * CELL_SIZE:
+				var map_position = local_to_map(event.position)
+				if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+					if not is_flag(map_position):
+						if is_mine(map_position):
+							game_over()
+						else:
+							process_lmb(map_position)
+				elif event.button_index == MOUSE_BUTTON_RIGHT and event.pressed:
+					process_rmb(map_position)
 func process_rmb(pos):
 	if is_grass(pos):
 		if is_flag(pos):
@@ -138,6 +142,15 @@ func highlight_cell():
 	else:
 		if is_number(mouse_pos):
 			set_cell(hover_layer, mouse_pos, tile_id, hover_atlas)
+func game_over():
+	died.emit()
+	print("Game is over!")
+	running = 0
+	for y in range(ROWS):
+		for x in range(COLS):
+			if is_mine(Vector2i(x, y)):
+				erase_cell(grass_layer, Vector2i(x, y))
+
 # Проверки по тайлам
 func is_mine(pos):
 	return get_cell_source_id(mine_layer, pos) != -1

@@ -1,9 +1,22 @@
-[gd_scene load_steps=2 format=3 uid="uid://xha8t3vt4ti"]
+[gd_scene load_steps=5 format=3 uid="uid://xha8t3vt4ti"]
 
 [ext_resource type="Texture2D" uid="uid://ch7aep2wti7ix" path="res://assets/Board-15-14.png" id="1_3o2as"]
+[ext_resource type="Script" path="res://scripts/game.gd" id="1_tng1t"]
+[ext_resource type="PackedScene" uid="uid://di8d52yfmhcli" path="res://scenes/level.tscn" id="3_jm3ei"]
+[ext_resource type="Script" path="res://scripts/SFX.gd" id="4_qxgm7"]
 
 [node name="Main" type="Node"]
+script = ExtResource("1_tng1t")
 
 [node name="board" type="Sprite2D" parent="."]
 texture = ExtResource("1_3o2as")
 offset = Vector2(375, 350)
+
+[node name="TileMap" parent="." instance=ExtResource("3_jm3ei")]
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+script = ExtResource("4_qxgm7")
+
+[connection signal="died" from="TileMap" to="AudioStreamPlayer" method="_on_died"]
+[connection signal="flagged" from="TileMap" to="AudioStreamPlayer" method="_on_flagged"]
+[connection signal="opened" from="TileMap" to="AudioStreamPlayer" method="_on_opened"]

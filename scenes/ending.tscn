@@ -1,0 +1,45 @@
+[gd_scene load_steps=7 format=3 uid="uid://du7mrfs226jge"]
+
+[ext_resource type="FontFile" uid="uid://miyj3gxbiqeq" path="res://assets/Nunito-Bold.ttf" id="1_8sb2w"]
+[ext_resource type="Script" path="res://scripts/ending.gd" id="1_mtf6m"]
+[ext_resource type="Script" path="res://scripts/jumper.gd" id="2_4pcd4"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_n5130"]
+bg_color = Color(0.631373, 0.631373, 0.631373, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ghxxx"]
+bg_color = Color(0.678431, 0.678431, 0.678431, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_uhqic"]
+bg_color = Color(0.462745, 0.462745, 0.462745, 1)
+
+[node name="CanvasLayer" type="CanvasLayer"]
+script = ExtResource("1_mtf6m")
+
+[node name="Button" type="Button" parent="."]
+offset_left = 300.0
+offset_top = 700.0
+offset_right = 450.0
+offset_bottom = 750.0
+theme_override_fonts/font = ExtResource("1_8sb2w")
+theme_override_font_sizes/font_size = 32
+theme_override_styles/normal = SubResource("StyleBoxFlat_n5130")
+theme_override_styles/hover = SubResource("StyleBoxFlat_ghxxx")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_uhqic")
+text = "RETRY"
+
+[node name="gameover" type="Label" parent="."]
+custom_minimum_size = Vector2(400, 100)
+offset_left = 175.0
+offset_top = 300.0
+offset_right = 575.0
+offset_bottom = 400.0
+pivot_offset = Vector2(200, 50)
+theme_override_fonts/font = ExtResource("1_8sb2w")
+theme_override_font_sizes/font_size = 50
+text = "GAME OVER"
+horizontal_alignment = 1
+vertical_alignment = 1
+script = ExtResource("2_4pcd4")
+
+[connection signal="pressed" from="Button" to="." method="_on_button_pressed"]

@@ -1,6 +1,8 @@
 extends AudioStreamPlayer
+# !СКРИПТ ДЛЯ ЗВУКОВ!
 
 const explosion : AudioStreamWAV = preload("res://assets/Explosion.wav")
+const won : AudioStreamWAV = preload("res://assets/Win.wav")
 
 const blip1 : AudioStreamWAV = preload("res://assets/Blip1.wav")
 const blip2 : AudioStreamWAV = preload("res://assets/Blip2.wav")
@@ -27,10 +29,19 @@ func _on_opened():
 		3:
 			stream = blip3
 			play()
-		_:
-			print("ERROR LOADING SOUNDS")
 
 
 func _on_flagged():
 	stream = flag
+	play()
+	
+func _ready():
+	if Global.initialized:
+		stream = select
+		play()
+	Global.initialized = true
+
+
+func _on_won():
+	stream = won
 	play()

@@ -1,0 +1,52 @@
+[gd_scene load_steps=8 format=3 uid="uid://c148x70quvadq"]
+
+[ext_resource type="Texture2D" uid="uid://c3u78571x5l6m" path="res://assets/Flag.png" id="1_smrll"]
+[ext_resource type="FontFile" uid="uid://b3vevbbtlp12w" path="res://assets/Nunito-Medium.ttf" id="2_h4iwk"]
+[ext_resource type="Script" path="res://scripts/mines.gd" id="3_ah8nc"]
+[ext_resource type="Script" path="res://scripts/time.gd" id="4_deqcw"]
+[ext_resource type="Texture2D" uid="uid://dxxqvv7rguj0l" path="res://assets/Timer.png" id="4_jrv8w"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rusdd"]
+bg_color = Color(0.490196, 0.490196, 0.490196, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_a7kb0"]
+font = ExtResource("2_h4iwk")
+font_size = 36
+
+[node name="HUD" type="CanvasLayer"]
+
+[node name="Panel" type="Panel" parent="."]
+offset_top = 700.0
+offset_right = 750.0
+offset_bottom = 750.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_rusdd")
+
+[node name="Flags" type="Sprite2D" parent="."]
+position = Vector2(25, 725)
+texture = ExtResource("1_smrll")
+
+[node name="Flaglabel" type="Label" parent="."]
+offset_left = 50.0
+offset_top = 700.0
+offset_right = 100.0
+offset_bottom = 750.0
+text = "40"
+label_settings = SubResource("LabelSettings_a7kb0")
+horizontal_alignment = 1
+vertical_alignment = 1
+script = ExtResource("3_ah8nc")
+
+[node name="Timerlabel" type="Label" parent="."]
+offset_left = 650.0
+offset_top = 700.0
+offset_right = 700.0
+offset_bottom = 750.0
+text = "0"
+label_settings = SubResource("LabelSettings_a7kb0")
+horizontal_alignment = 2
+vertical_alignment = 1
+script = ExtResource("4_deqcw")
+
+[node name="Timer" type="Sprite2D" parent="."]
+position = Vector2(725, 725)
+texture = ExtResource("4_jrv8w")

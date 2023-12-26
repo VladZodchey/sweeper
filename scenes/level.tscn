@@ -1,0 +1,41 @@
+[gd_scene load_steps=5 format=3 uid="uid://di8d52yfmhcli"]
+
+[ext_resource type="Texture2D" uid="uid://cmtlss2xwumpk" path="res://assets/Tileset-50.png" id="1_4i1mt"]
+[ext_resource type="Script" path="res://scripts/sweeper.gd" id="2_3mtl8"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_d5srm"]
+texture = ExtResource("1_4i1mt")
+texture_region_size = Vector2i(50, 50)
+0:0/0 = 0
+1:0/0 = 0
+2:0/0 = 0
+3:0/0 = 0
+4:0/0 = 0
+5:0/0 = 0
+6:0/0 = 0
+0:1/0 = 0
+1:1/0 = 0
+2:1/0 = 0
+3:1/0 = 0
+4:1/0 = 0
+5:1/0 = 0
+6:1/0 = 0
+7:1/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_xrnp0"]
+tile_size = Vector2i(50, 50)
+sources/0 = SubResource("TileSetAtlasSource_d5srm")
+
+[node name="TileMap" type="TileMap"]
+tile_set = SubResource("TileSet_xrnp0")
+format = 2
+layer_0/name = "Mines"
+layer_1/name = "Numbers"
+layer_1/tile_data = PackedInt32Array()
+layer_2/name = "Grass"
+layer_2/tile_data = PackedInt32Array()
+layer_3/name = "Flags"
+layer_3/tile_data = PackedInt32Array()
+layer_4/name = "Hover"
+layer_4/tile_data = PackedInt32Array()
+script = ExtResource("2_3mtl8")

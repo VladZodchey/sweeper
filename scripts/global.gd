@@ -1,7 +1,7 @@
 extends Node
 # !ГЛОБАЛЬНЫЕ НАСТРОЙКИ!
 
-const max_mines = 20
+const max_mines = 1
 var mines = 20
 var time = 0
 var stop : bool = true

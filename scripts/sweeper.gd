@@ -121,16 +121,7 @@ func process_rmb(pos):
 			set_cell(flag_layer, pos, tile_id, flag_atlas)
 			Global.mines -= 1
 		flagged.emit()
-	var all_revealed := true
-	for cell in get_used_cells(mine_layer):
-		if not is_flag(cell):
-			all_revealed = false
-	for i in get_empty_cells():
-		if is_grass(i):
-			all_revealed = false
-	if all_revealed:
-		won.emit()
-		running = false
+	check_win()
 # Обработка лкм (подкоп клеток)
 func process_lmb(pos):
 	var revealed := []
@@ -144,16 +135,7 @@ func process_lmb(pos):
 		if not is_number(to_reveal[0]):
 			to_reveal = reveal_cells(to_reveal, revealed)
 		to_reveal.erase(to_reveal[0])
-	var all_revealed := true
-	for cell in get_used_cells(mine_layer):
-		if not is_flag(cell):
-			all_revealed = false
-	for i in get_empty_cells():
-		if is_grass(i):
-			all_revealed = false
-	if all_revealed:
-		won.emit()
-		running = false
+	check_win()
 	opened.emit()
 func reveal_cells(to_reveal, revealed):
 	for i in get_surrounding(to_reveal[0]):
@@ -180,6 +162,18 @@ func game_over():
 		for x in range(COLS):
 			if is_mine(Vector2i(x, y)):
 				erase_cell(grass_layer, Vector2i(x, y))
+func check_win():
+	var all_revealed := true
+	for cell in get_used_cells(mine_layer):
+		if not is_flag(cell):
+			all_revealed = false
+	for i in get_empty_cells():
+		if is_grass(i):
+			all_revealed = false
+	if all_revealed:
+		won.emit()
+		Global.stop = true
+		running = false
 
 # Проверки по тайлам
 func is_mine(pos):

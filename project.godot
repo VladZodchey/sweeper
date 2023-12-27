@@ -11,9 +11,10 @@ config_version=5
 [application]
 
 config/name="Minesweeper"
+config/version="1.0"
 run/main_scene="res://scenes/main.tscn"
 config/features=PackedStringArray("4.2", "Forward Plus")
-config/icon="res://icon.svg"
+config/icon="res://assets/Timer.png"
 
 [autoload]
 
@@ -23,6 +24,7 @@ Global="*res://scripts/global.gd"
 
 window/size/viewport_width=750
 window/size/viewport_height=750
+window/size/resizable=false
 
 [rendering]
 

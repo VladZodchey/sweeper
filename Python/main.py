@@ -168,7 +168,7 @@ class Sweeper:
                     if i not in revealed:
                         if i not in to_reveal:
                             to_reveal.append(i)
-            to_reveal.remove(to_reveal[0])
+            to_reveal.pop(0)
 
 
 

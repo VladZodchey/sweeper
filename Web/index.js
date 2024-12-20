@@ -4,6 +4,16 @@ const prob = 10; // Процентаж мин
 
 const board = document.getElementById('board')
 const goal = document.getElementById('goal')
+const result = document.getElementById('result')
+
+// TODO :: Заменить прописанные в коде символы на свободный тайлсет-объект
+
+/* const tiles = {
+    mine: '*',
+    empty: '.',
+    flag: 'P',
+    fog: '#',
+} */
 
 const colors = [
     'white',
@@ -24,8 +34,6 @@ var started = false
 
 var mines = 0;
 var flags = 0;
-
-
 
 // Создаёт массивы
 function initialize() {
@@ -96,19 +104,17 @@ function reveal(x, y) {
     let to_reveal = [[x, y]]
     while (to_reveal.length != 0) {
         let revealing = to_reveal[0]
-        if (plan[to_reveal[0][0]][to_reveal[0][1]] == 'P') {
+        if (plan[revealing[0]][revealing[1]] == 'P') {
             flags++
         }
         plan[revealing[0]][revealing[1]] = ''
         revealed.push(revealing)
         if (field[revealing[0]][revealing[1]] == '.') {
-            //console.log('Thats not a number')
-            let surround = surrounding([revealing[0]], [revealing[1]])
+            console.log('Got to reveal. my value is ' + field[revealing[0]][revealing[1]])
+            let surround = surrounding(revealing[0], revealing[1])
             for (let i = 0; i < surround.length; i++) {
                 if (!in_array(surround[i], revealed)) {
-                    console.log('got to reveal includes')
                     if (!in_array(surround[i], to_reveal)) {
-                        console.log('got to revealeD includes')
                         if ('12345678.'.includes(field[surround[i][0]][surround[i][1]])) {
                             to_reveal.push(surround[i])
                         }
@@ -198,11 +204,20 @@ function dig(x, y) {
             }
         }
         render()
-        alert('Игра окончена!')
+        resulting('Вы подорвались! :(', 'red')
     }
     else {
         reveal(x, y)
         render()
+    }
+    if (win()) {
+        resulting('Победа!', 'chartreuse')
+        running = false
+        for (let x = 0; x < cols; x++) {
+            for (let y = 0; y < rows; y++) {
+                plan[x][y] = ''
+            }
+        }
     }
 }
 
@@ -218,7 +233,7 @@ function flag(x, y) {
     }
     render()
     if (win()) {
-        alert('Победа!')
+        resulting('Победа!', 'chartreuse')
         running = false
         for (let x = 0; x < cols; x++) {
             for (let y = 0; y < rows; y++) {
@@ -233,12 +248,21 @@ function win() {
     if (flags != mines) return false
     for (let x = 0; x < cols; x++) {
         for (let y = 0; y < rows; y++) {
+            if (plan[x][y] == '#') {
+                return false
+            }
             if ((plan[x][y] == 'P') != (field[x][y] == '*')) {
                 return false
             } 
         }
     }
     return true
+}
+
+// Функция вывода сообщения наверху.
+function resulting(text, color) {
+    result.style.color = color
+    result.textContent = text
 }
 
 while (mines == 0) {

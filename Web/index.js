@@ -183,6 +183,7 @@ function dig(x, y) {
         let c = 0
         while (c < 5) {
             if (field[x][y] != '.') {
+                flags = 0
                 mines = 0
                 initialize()
                 generate()
@@ -205,6 +206,9 @@ function dig(x, y) {
         }
         render()
         resulting('Вы подорвались! :(', 'red')
+    }
+    else if (field[x][y] == '*' && plan[x][y] == 'P') {
+        return
     }
     else {
         reveal(x, y)

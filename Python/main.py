@@ -1,7 +1,6 @@
 from random import randint
 from enum import Enum
 
-# TODO :: Сделать enum для символов для быстрой замены
 # TODO :: Сделать границы клеток
 # TODO :: Раскрасить текст
 
@@ -11,13 +10,18 @@ class Modes(Enum):  # Enum для режимов (Можно было бы об�
     dig = 1   # подкопать клетку
     undo = 2  # отменить расположение флага
 
+class Tiles(Enum):
+    empty = '.'
+    fog = '#'
+    mine = '*'
+    flag = 'P'
 
 class Sweeper:
     def __init__(self, width: int, height: int, probability: int) -> None:  # Вводные настройки
         self.width  =  width
         self.height =  height
-        self.field  =  [['.'] * height for _ in range(width)]
-        self.plan   =  [['#'] * height for _ in range(width)]
+        self.field  =  [[Tiles.empty.value] * height for _ in range(width)]
+        self.plan   =  [[Tiles.fog.value] * height for _ in range(width)]
         self.game   =  True
         self.prob   =  probability
         self.mines  =  0
@@ -34,7 +38,7 @@ class Sweeper:
         print('Постарайтесь не взорваться!')
         while self.game:
             if self.win():
-                print('\n'.join(['\t'.join([cell if cell != '*' else '♥' for cell in row]) for row in self.field]))
+                print('\n'.join(['\t'.join([cell if cell != Tiles.mine.value else '♥' for cell in row]) for row in self.field]))
                 print('Вы выиграли!')
                 exit()
             mode, x, y = self.ask()
@@ -43,11 +47,11 @@ class Sweeper:
 
     def win(self) -> bool:  # Проверка на победную ситуацию
         if self.mines != self.flags: return False
-        if not all(['#' not in row for row in self.plan]): return False
+        if not all([Tiles.fog.value not in row for row in self.plan]): return False
         correct = True
         for x in range(self.width):
             for y in range(self.height):
-                if (self.plan[x][y] == 'P') != (self.field[x][y] == '*'):
+                if (self.plan[x][y] == Tiles.flag.value) != (self.field[x][y] == Tiles.mine.value):
                     correct = False
         return correct
 
@@ -100,14 +104,14 @@ class Sweeper:
                 else:
                     self.reveal_cells((x, y))
             case Modes.flag:
-                if self.plan[x][y] == '#':
-                    self.plan[x][y] = 'P'
+                if self.plan[x][y] == Tiles.fog.value:
+                    self.plan[x][y] = Tiles.flag.value
                     self.flags += 1
                 else:
                     print('Зона уже открыта.')
             case Modes.undo:
-                if self.plan[x][y] == 'P':
-                    self.plan[x][y] = '#'
+                if self.plan[x][y] == Tiles.flag.value:
+                    self.plan[x][y] = Tiles.fog.value
                     self.flags -= 1
                 else:
                     print('Здесь нет флага!')
@@ -117,13 +121,13 @@ class Sweeper:
 
 
     def is_mine(self, x: int, y: int) -> bool:  # Мина?
-        return self.field[x][y] == '*'
+        return self.field[x][y] == Tiles.mine.value
 
     def is_number(self, x: int, y: int) -> bool:  # Число?
         return self.field[x][y] in '12345678'
 
     def is_flag(self, x: int, y: int) -> bool:  # Флажок?
-        return self.plan[x][y] == 'P'
+        return self.plan[x][y] == Tiles.flag.value
 
 
     # ГЕНЕРАЦИЯ
@@ -134,7 +138,7 @@ class Sweeper:
         for x in range(self.width):
             for y in range(self.height):
                 if randint(1, 100) <= probability:
-                    populated[x][y] = '*'
+                    populated[x][y] = Tiles.mine.value
                     self.mines += 1
         return populated
 
@@ -143,12 +147,12 @@ class Sweeper:
         numbered = array.copy()
         for x in range(self.width):
             for y in range(self.height):
-                if array[x][y] != '*':
+                if array[x][y] != Tiles.mine.value:
                     count = 0
                     for coord in self.surrounding((x, y)):
-                        if self.field[coord[0]][coord[1]] == '*':
+                        if self.field[coord[0]][coord[1]] == Tiles.mine.value:
                             count += 1
-                    numbered[x][y] = str(count) if count != 0 else '.'
+                    numbered[x][y] = str(count) if count != 0 else Tiles.empty.value
         return numbered
 
 

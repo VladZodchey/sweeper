@@ -6,20 +6,20 @@ from enum import Enum
 # TODO :: Раскрасить текст
 
 
-class Mode(Enum):  # Enum для режимов (Можно было бы обойтись и без него)
+class Modes(Enum):  # Enum для режимов (Можно было бы обойтись и без него)
     flag = 0  # пометить флагом
     dig = 1   # подкопать клетку
     undo = 2  # отменить расположение флага
 
 
 class Sweeper:
-    def __init__(self, width: int, height: int, probabilty: int) -> None:  # Вводные настройки
+    def __init__(self, width: int, height: int, probability: int) -> None:  # Вводные настройки
         self.width  =  width
         self.height =  height
         self.field  =  [['.'] * height for _ in range(width)]
         self.plan   =  [['#'] * height for _ in range(width)]
         self.game   =  True
-        self.prob   =  probabilty
+        self.prob   =  probability
         self.mines  =  0
         self.flags  =  0
 
@@ -70,10 +70,10 @@ class Sweeper:
                 assert self.height >= int(decision[2]) >= 1
 
                 match decision[0].lower():
-                    case 'f': mode = Mode.flag
-                    case 'p': mode = Mode.flag
-                    case 'd': mode = Mode.dig
-                    case 'u': mode = Mode.undo
+                    case 'f': mode = Modes.flag
+                    case 'p': mode = Modes.flag
+                    case 'd': mode = Modes.dig
+                    case 'u': mode = Modes.undo
                     case _: raise AssertionError
                 x = int(decision[1]) - 1
                 y = int(decision[2]) - 1
@@ -85,9 +85,9 @@ class Sweeper:
         return mode, x, y
 
 
-    def think(self, mode: Mode, x: int, y: int) -> None:  # Осуществляет логику игры
+    def think(self, mode: Modes, x: int, y: int) -> None:  # Осуществляет логику игры
         match mode:
-            case Mode.dig:
+            case Modes.dig:
                 if self.is_mine(x, y):
                     for x in range(self.width):
                         for y in range(self.height):
@@ -99,13 +99,13 @@ class Sweeper:
                     print('Зона уже открыта.')
                 else:
                     self.reveal_cells((x, y))
-            case Mode.flag:
+            case Modes.flag:
                 if self.plan[x][y] == '#':
                     self.plan[x][y] = 'P'
                     self.flags += 1
                 else:
                     print('Зона уже открыта.')
-            case Mode.undo:
+            case Modes.undo:
                 if self.plan[x][y] == 'P':
                     self.plan[x][y] = '#'
                     self.flags -= 1
